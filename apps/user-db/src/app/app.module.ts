@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal: true, envFilePath: '/.user-db.env'}),
+    ConfigModule.forRoot({isGlobal: true, envFilePath: '/envs/.user-db.env'}),
     UserModule,
     AuthModule,
   ],

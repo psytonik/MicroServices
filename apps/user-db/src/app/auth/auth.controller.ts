@@ -1,20 +1,23 @@
-import {Body, Controller, Post} from '@nestjs/common';
+import {Body, Controller} from '@nestjs/common';
 import {AuthService} from "./auth.service";
-import {SignInDto, SignUpDto} from "./dto/auth.dto";
-
+import {AccountSignIn, AccountSignUp} from '@user-db/contracts'
+import {RMQRoute, RMQValidate} from "nestjs-rmq";
 
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {
   }
-  @Post('signup')
-  async signUp(@Body() dto: SignUpDto){
+  @RMQRoute(AccountSignUp.topic)
+  @RMQValidate()
+  async signUp(@Body() dto: AccountSignUp.Request):Promise<AccountSignUp.Response>{
     return this.authService.signUpAuthService(dto);
   }
-  @Post('signin')
-  async signIn(@Body() {email,password}: SignInDto){
+  @RMQRoute(AccountSignIn.topic)
+  @RMQValidate()
+  async signIn(@Body() {email,password}: AccountSignIn.Request): Promise<AccountSignIn.Response>{
     const {id} = await this.authService.validateUser({email, password});
     return this.authService.signInAuthService(id);
   }
 }
+
 

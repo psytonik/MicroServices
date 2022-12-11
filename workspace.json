@@ -1,6 +1,8 @@
 {
   "version": 2,
   "projects": {
+    "api": "apps/api",
+    "contracts": "libs/contracts",
     "interfaces": "libs/interfaces"
   }
 }

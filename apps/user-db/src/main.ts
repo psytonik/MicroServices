@@ -5,7 +5,7 @@ import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const application = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
+  const globalPrefix = 'user-db';
   application.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3333;
 

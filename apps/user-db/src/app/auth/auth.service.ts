@@ -3,7 +3,7 @@ import {UserRepository} from "../user/repositories/user.repository";
 import {UserEntity} from "../user/entities/user.entity";
 import {UserRole} from "@user-db/interfaces";
 import {JwtService} from "@nestjs/jwt";
-import {SignInDto, SignUpDto} from "./dto/auth.dto";
+import {AccountSignIn, AccountSignUp} from "@user-db/contracts";
 
 @Injectable()
 export class AuthService {
@@ -11,7 +11,7 @@ export class AuthService {
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService
   ) {}
-  async signUpAuthService({email, password, displayName}: SignUpDto): Promise<{email:string}> {
+  async signUpAuthService({email, password, displayName}: AccountSignUp.Request): Promise<AccountSignUp.Response> {
     const oldUser = await this.userRepository.findUser(email);
     if(oldUser){
       throw new Error('User Already Exists');
@@ -27,7 +27,7 @@ export class AuthService {
       email: newUser.email
     }
   }
-  async validateUser({email,password}:SignInDto): Promise<{id:string}>{
+  async validateUser({email,password}:AccountSignIn.Request): Promise<{id:string}>{
     const user = await this.userRepository.findUser(email);
     if(!user){
       throw new Error('Wrong Login or Password')
@@ -39,7 +39,7 @@ export class AuthService {
     }
     return {id: user._id}
   }
-  async signInAuthService(id:string): Promise<{access_token:string}>{
+  async signInAuthService(id:string): Promise<AccountSignIn.Response>{
     return {
       access_token: await this.jwtService.signAsync({id})
     }
